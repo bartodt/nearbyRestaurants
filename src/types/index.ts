@@ -16,18 +16,21 @@ export type PredictionType = {
   }
   
   export type Restaurant = {
-    business_status: string
+    business_status?: string
     geometry: Geometry
     icon?: string 
     icon_background_color?: string
     name: string 
     opening_hours?: {open_now: boolean}
     photos?: Photos[]
-    place_id: string
+    photo_url?: string
+    place_id?: string
     rating: number
     user_ratings_total: number
     vicinity: string
+    action?: () => void
   }
+
 
   export type Reviews = {
     author_name: string,
@@ -41,7 +44,6 @@ export type PredictionType = {
   type Photos = {
     height: number
     width: number
-    html_attributions: string[]
     photo_reference: string
   }
 

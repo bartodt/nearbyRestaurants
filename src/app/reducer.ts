@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import axios from 'axios';
 import { Restaurant, Reviews } from "../types";
+import { isEqual } from '../auxiliar/function';
 
 interface Storage {
   list: Restaurant[];
@@ -23,15 +24,11 @@ export const { actions, reducer } = createSlice({
   name: 'data',
   initialState,
   reducers: {
-    updateList: (state, { payload }: PayloadAction<Restaurant[]>) => {
+    setList: (state, { payload }: PayloadAction<Restaurant[]>) => {
       state.list = payload;
     },
-    updateReviews: (state, { payload }: PayloadAction<Reviews[]>) => {
+    setReviews: (state, { payload }: PayloadAction<Reviews[]>) => {
       state.reviews = payload;
-    },
-    updateSearchs: (state, { payload }: PayloadAction<string>) => {
-      if (state.recentSearchs.length > 7) state.recentSearchs.shift();
-      state.recentSearchs = [...state.recentSearchs, payload];
     },
     loading: (state, { payload = true }: PayloadAction<boolean>) => {
       state.isLoading = payload;
@@ -44,10 +41,14 @@ export const { actions, reducer } = createSlice({
       state.isLoading = false;
       state.error = payload;
     },
+    cleanUp: (state) => {
+      Object.assign(state, initialState)
+    }
   },
 });
 
-export const { updateList, updateReviews, updateSearchs, failure, loading, success } = actions;
+export const { setList, setReviews, failure, loading, success } = actions;
+
 
 export const getList = (rootState: RootState): Restaurant[] => {
   return rootState.state.list;
