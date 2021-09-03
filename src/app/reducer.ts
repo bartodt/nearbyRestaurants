@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { RootState } from './store';
 import axios from 'axios';
-import { Restaurant, Reviews } from '../../types';
+import { Restaurant, Reviews } from "../types";
 
 interface Storage {
   list: Restaurant[];
@@ -68,7 +68,5 @@ export const getErrors = (rootState: RootState): any => {
 export const isLoading = (rootState: RootState): boolean => {
   return rootState.state.isLoading;
 };
-
-
 
 export default reducer;
