@@ -8,13 +8,13 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import FeedStack from './src/navigation/navigation';
+import MainStack from './src/navigation/navigation';
 
 
 const App = () => {
   return (
     <NavigationContainer>
-      <FeedStack />
+      <MainStack />
     </NavigationContainer>
   );
 };

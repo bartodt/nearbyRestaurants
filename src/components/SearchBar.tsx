@@ -1,26 +1,22 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import {
   StyleSheet,
   View,
   TextInput,
-  ViewStyle
 } from 'react-native'
-import { PredictionType } from '../types'
-import Predictions from './Predictions'
+import { ScrollView } from 'react-native-gesture-handler'
 
 
 type SearchBarProps = {
   value: string
   onChangeText: (text: string) => void
-  predictions: PredictionType[]
-  onPredictionTapped: (placeId: string, description: string) => void
 }
 
-const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText, predictions, onPredictionTapped }) => {
+const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText }) => {
   const { container, inputStyle } = styles
 
   return (
-    <View style={container}>
+    <ScrollView style={container}>
       <TextInput
         style={[inputStyle]}
         placeholder='Where do you want to eat?'
@@ -29,23 +25,27 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText, pre
         onChangeText={onChangeText}
         returnKeyType='search'
       />
-      {predictions.length > 0 && <Predictions predictions={predictions} onPredictionTapped={onPredictionTapped} />}
-    </View>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
+    width: "95%",
+    borderRadius: 10,
+    height: "20%"
+
   },
   inputStyle: {
+    width: "100%",
     borderRadius: 10,
-    margin: 10,
-    color: '#000',
+    color: 'black',
     borderColor: '#666',
     backgroundColor: '#FFF',
-    borderWidth: 1,
     height: 45,
     paddingHorizontal: 10,
     fontSize: 18,
+    opacity: 1,
   },
 })
 export default SearchBar

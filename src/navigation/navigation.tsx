@@ -8,7 +8,7 @@ import {ThemeContext} from 'styled-components/native';
 
 const Stack = createStackNavigator();
 
-const FeedStack = () => {
+const MainStack = () => {
     return (
         <Stack.Navigator
             initialRouteName="Home"
@@ -33,4 +33,4 @@ const FeedStack = () => {
     )
 }
 
-export default FeedStack
+export default MainStack

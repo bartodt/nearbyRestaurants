@@ -15,6 +15,7 @@ import { PredictionType, Region, Restaurant } from '../types';
 import SearchBar from './SearchBar';
 import { default as env } from 'react-native-config';
 import Geolocation from '@react-native-community/geolocation';
+import Predictions from './Predictions';
 
 const GOOGLE_PACES_API_BASE_URL = 'https://maps.googleapis.com/maps/api/place'
 
@@ -30,7 +31,6 @@ export function Map() {
   const [predictions, setPredictions] = useState<PredictionType[]>([])
   const [pressedPrediction, setPressedPrediction] = useState<boolean>(false)
   const [markers, setMarkers] = useState<Restaurant[]>([])
-  const { container, body, map } = styles
 
   useEffect(() => {
     if (search.trim() === '' || pressedPrediction) {
@@ -114,8 +114,6 @@ export function Map() {
       console.warn(err)
     }
   }
-
-  
   const findCoordinates = async () => {
     Geolocation.getCurrentPosition(
       (position) => {
@@ -129,12 +127,12 @@ export function Map() {
     );
   };
 
-
+  const { container, map, locationIcon } = styles
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <MapView
-        style={{ flex: 1 }}
+        style={map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         region={region}
@@ -151,42 +149,37 @@ export function Map() {
 
         )}
       </MapView>
-      <SafeAreaView style={container}>
-        <View style={container}>
-
-          <SearchBar
-            value={search}
-            onChangeText={(text) => {
-              onChangeText(text)
-            }}
-            predictions={predictions}
-            onPredictionTapped={onPredictionTapped}
-          />
-
-
-          <TouchableOpacity
-            onPress={requestLocationPermission}
-            style={{
-              width: 60, height: 60, position: "relative",
-              bottom: 20, right: 20, borderRadius: 30, backgroundColor: "black"
-            }}>
-
-          </TouchableOpacity>
+      <View style={container}>
+        <SearchBar
+          value={search}
+          onChangeText={(text) => {
+            onChangeText(text)
+          }}
+        />
+        {predictions.length > 0 && <Predictions predictions={predictions} onPredictionTapped={onPredictionTapped} />}
         </View>
-      </SafeAreaView>
+        <View style={{backgroundColor: "black", position: "absolute"}}>
+        <TouchableOpacity
+          onPress={requestLocationPermission}
+          style={locationIcon}>
+
+        </TouchableOpacity>
+        </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute', top: 10, width: '100%'
+    position: 'absolute', top: 10, width: '100%', alignItems: "center"
   },
   map: {
-    width: "50%",
-    height: "50%",
+    flex: 1
   },
   body: {
     paddingHorizontal: 20
+  },
+  locationIcon: {
+backgroundColor: "black", position: "absolute"
   }
 });

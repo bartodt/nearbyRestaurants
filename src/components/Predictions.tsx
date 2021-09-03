@@ -11,7 +11,7 @@ type PredictionProps = {
 
 
 const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredictionTapped }) => {
-    const { predictionsContainer, predictionRow } = styles
+    const { predictionsContainer, predictionRow, text } = styles
 
     const renderItem = ({ item }: { item: PredictionType }) => {
         return (
@@ -19,7 +19,7 @@ const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredic
                 style={predictionRow}
                 onPress={() => onPredictionTapped(item.place_id, item.description)}
             >
-                <Text numberOfLines={1}>
+                <Text style={text} numberOfLines={1}>
                     {item.description}
                 </Text>
             </TouchableOpacity>
@@ -32,25 +32,29 @@ const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredic
             renderItem={renderItem}
             keyExtractor={(item) => item.place_id}
             keyboardShouldPersistTaps='handled'
-            style={[predictionsContainer]}
+            style={[predictionsContainer, predictions.length === 1 ? null : {bottom: 5}]}
         />
     )
 }
 
 const styles = StyleSheet.create({
     predictionsContainer: {
-        backgroundColor: '#FFF',
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderRadius: 5,
-        width: "90%",
-        marginLeft: "auto",
-        marginRight: "auto"
+        backgroundColor: 'white',
+        width: "95%",
+        opacity: 0.8,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5
     },
     predictionRow: {
-        paddingBottom: 20,
-        borderBottomColor: 'black',
-        
+        width: "95%",
+        paddingBottom: 10,
+        paddingTop: 10,
+        marginLeft: 10,
+        marginRight: "auto",
+        borderBottomWidth: 0.3,
+    },
+    text: {
+fontStyle: "italic"
     }
 })
 
