@@ -14,7 +14,20 @@ npm install
 ## Create a .env file with your Google Api Key
 
 ```python
-GOOGLE_API_KEY="..."
+GOOGLE_API_KEY=<YOUR_GOOGLE_API_KEY>
+```
+
+
+## Android
+```python
+npx react-native run-android
+npm start
+```
+
+## iOS
+```python
+npx react-native run-iOS
+npm start
 ```
 
 ## Technologies Used
