@@ -20,12 +20,14 @@ GOOGLE_API_KEY=<YOUR_GOOGLE_API_KEY>
 
 ## Android
 ```python
-react-native run-android
+npx react-native run-android
+npm start
 ```
 
 ## iOS
 ```python
-react-native run-iOS
+npx react-native run-iOS
+npm start
 ```
 
 ## Technologies Used
