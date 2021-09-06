@@ -17,6 +17,17 @@ npm install
 GOOGLE_API_KEY=<YOUR_GOOGLE_API_KEY>
 ```
 
+
+## Android
+```python
+react-native run-android
+```
+
+## iOS
+```python
+react-native run-iOS
+```
+
 ## Technologies Used
 Made with React Native, TypeScript, Redux and Google Maps APIs for fetching data.
 
