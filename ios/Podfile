@@ -21,6 +21,8 @@ target 'nearbyRestaurants' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
   target 'nearbyRestaurantsTests' do
     inherit! :complete
     # Pods for testing

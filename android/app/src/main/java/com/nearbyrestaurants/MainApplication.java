@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.horcrux.svg.SvgPackage;
 import com.reactron.react.settingenabler.RNAndroidLocationSettingEnablerPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
