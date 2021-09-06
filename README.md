@@ -5,7 +5,7 @@ NearBite is an APP to get a list of near restaurants based on a selected locatio
 
 ## Installation
 
-Use npm to install de packagues
+Run npm to install de packages
 
 ```bash
 npm install
