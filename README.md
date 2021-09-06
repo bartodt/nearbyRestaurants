@@ -1,6 +1,6 @@
 # nearbyRestaurants
 
-APP for getting a list of near restaurants based on a selected direction.
+NearBite is an APP to get a list of near restaurants based on a selected location.
 Made with React Native, TypeScript, Redux and Google Maps APIs for fetching data.
 
 <p align="center">
