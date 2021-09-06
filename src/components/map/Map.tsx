@@ -51,6 +51,12 @@ const Map: FC<Props> = ({ navigation }) => {
 
 
   useEffect(() => {
+    findGPSCoordinates()
+  }, [])
+ 
+
+
+  useEffect(() => {
     const setNearbyRestaurants = async () => {
       try {
         const nearbyPlaces = await getGoogleNearbySearch(region.latitude, region.longitude)
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   locationIcon: {
-    flex: 1, height: 32, width: 32, marginTop: "auto", marginBottom: "auto", marginLeft: "auto", marginRight: "auto"
+    flex: 1, height: 32, width: 32, marginTop: "auto", marginBottom: "auto", marginLeft: "auto", marginRight: "auto",
   }
 });
 
