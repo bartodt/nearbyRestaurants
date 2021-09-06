@@ -55,24 +55,26 @@ export const getGoogleAutoComplete = async (query: string) => {
       method: 'post',
       url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${env.GOOGLE_API_KEY}`,
     });
-    return result;
+    return result.data
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     return Promise.reject({ ...error.data });
   }
 };
 
 export const getGoogleLocation = async (query: string) => {
   try {
-    query = query.replace(/\s/g, "+")
+    query = query.replace(/\s/g, '+');
     const result = await axios.request({
       method: 'post',
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${env.GOOGLE_API_KEY}`,
     });
 
-    const { lat, lng } = result.data.results[0].geometry.location
-    return {lat, lng};
+    const { lat, lng } = result.data.results[0].geometry.location;
+
+    return { latitude: lat, longitude: lng };
   } catch (error: any) {
-    Promise.reject({ ...error.data });
+    console.log(error);
+    return Promise.reject({ ...error.data });
   }
 };

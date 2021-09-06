@@ -34,8 +34,8 @@ const Map: FC<Props> = ({ navigation }) => {
   const [region, setRegion] = useState<Region>({
     latitude: 0,
     longitude: 0,
-    latitudeDelta: 0.03,
-    longitudeDelta: 0.03,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
   })
   const [predictions, setPredictions] = useState<PredictionType[]>([])
   const [pressedPrediction, setPressedPrediction] = useState<boolean>(false)
@@ -51,7 +51,7 @@ const Map: FC<Props> = ({ navigation }) => {
 
 
   useEffect(() => {
-    const moveMapToCoordenates = async () => {
+    const setNearbyRestaurants = async () => {
       try {
         const nearbyPlaces = await getGoogleNearbySearch(region.latitude, region.longitude)
         await dispatch(setList(nearbyPlaces))
@@ -61,7 +61,7 @@ const Map: FC<Props> = ({ navigation }) => {
 
     }
 
-    moveMapToCoordenates();
+    setNearbyRestaurants();
   }, [region.latitude || region.longitude])
 
 
@@ -71,7 +71,7 @@ const Map: FC<Props> = ({ navigation }) => {
     try {
       const result = await getGoogleAutoComplete(text)
       if (result) {
-        const { predictions } = result.data
+        const { predictions } = result
         setPredictions(predictions)
       }
     } catch (error: any) {
@@ -83,7 +83,7 @@ const Map: FC<Props> = ({ navigation }) => {
 
   const onPredictionTapped = async (description: string) => {
     try {
-      const result = await getGoogleLocation(description) // returns {lat, lng}
+      const result = await getGoogleLocation(description) 
       if (result) {
         setSearch(description)
         setPressedPrediction(true)
@@ -132,9 +132,6 @@ const Map: FC<Props> = ({ navigation }) => {
     }
   }
 
-  const clearText = () => {
-    setSearch("")
-  }
 
   const { container, map, locationIcon, locationContainer } = styles
   return (
@@ -165,7 +162,6 @@ const Map: FC<Props> = ({ navigation }) => {
           onChangeText={(text) => {
             onChangeText(text)
           }}
-          clearText={clearText}
         />
         {predictions.length > 0 && <Predictions predictions={predictions} onPredictionTapped={onPredictionTapped} />}
 

@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from 'react'
-import { StyleSheet, Text } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { PredictionType } from '../../types'
 
 
 type PredictionProps = {
     predictions: PredictionType[]
-    onPredictionTapped: (placeId: string, description: string) => void
+    onPredictionTapped: (description: string) => void
 }
 
 
@@ -17,7 +17,7 @@ const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredic
         return (
             <TouchableOpacity
                 style={predictionRow}
-                onPress={() => onPredictionTapped(item.place_id, item.description)}
+                onPress={() => onPredictionTapped(item.description)}
             >
                 <Text style={text} numberOfLines={1}>
                     {item.description}
@@ -27,13 +27,15 @@ const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredic
     }
 
     return (
+        <View style={predictionsContainer}>
         <FlatList
             data={predictions}
             renderItem={renderItem}
             keyExtractor={(item) => item.place_id}
             keyboardShouldPersistTaps='handled'
-            style={[predictionsContainer]}
+
         />
+        </View>
     )
 }
 
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
         opacity: 0.8,
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,
-        bottom: 12
+        bottom: 12,
     },
     predictionRow: {
         width: "95%",

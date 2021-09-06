@@ -11,7 +11,7 @@ type SearchBarProps = {
   onChangeText: (text: string) => void
 }
 
-const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText, clearText}) => {
+const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText}) => {
   const { container, inputStyle } = styles
 
   return (
