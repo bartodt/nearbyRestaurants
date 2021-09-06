@@ -19,6 +19,8 @@ target 'nearbyRestaurants' do
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'nearbyRestaurantsTests' do
     inherit! :complete
     # Pods for testing

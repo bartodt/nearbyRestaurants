@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import {
   StyleSheet,
-  View,
   TextInput,
 } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -12,7 +11,7 @@ type SearchBarProps = {
   onChangeText: (text: string) => void
 }
 
-const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText }) => {
+const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText, clearText}) => {
   const { container, inputStyle } = styles
 
   return (
@@ -30,10 +29,10 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({ value, onChangeText }) =
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
     width: "95%",
     borderRadius: 10,
-    height: "20%"
+    height: 50,
+    maxHeight: 50
 
   },
   inputStyle: {
@@ -46,6 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 18,
     opacity: 1,
+    
   },
 })
 export default SearchBar

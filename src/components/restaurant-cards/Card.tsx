@@ -2,6 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Restaurant } from '../../types';
+import { Rating } from 'react-native-ratings';
 
 
 type Props = Restaurant
@@ -16,62 +17,70 @@ export const Card: FC<Props> = ({
     action
 }): ReactElement => {
 
-    const renderReviews = () => {
-        if (rating && user_ratings_total) {
-            return (
-                <Text style={reviews}> {`Rating: ${rating} (${user_ratings_total})`}</Text>
-            )
-        }
-        if (rating) return (
-            <Text style={reviews}> {`Rating: ${rating}`}</Text>
-        )
-        else return
-
-    }
-
-    const { container, image, opacityCover, header, logo, title, content, description, reviews, status } = styles
+    const { cardContainer, container, image, opacityCover, header, logo, title, content, description, reviews, reviewContainer } = styles
     return (
-        <TouchableOpacity style={container} onPress={action}>
-            {photo_url && <Image style={image}
-                source={{ uri: photo_url}}
-            />}
-            <View />
-            <View style={opacityCover}>
-                <View style={header}>
-                    <Image style={logo} source={{ uri: icon }} />
-                    <Text style={title}>{name}</Text>
+        <View style={cardContainer}>
+
+            <TouchableOpacity style={container} onPress={action}>
+                {photo_url && <Image style={image}
+                    source={{ uri: photo_url }}
+                />}
+                <View />
+                <View style={opacityCover}>
+                    <View style={header}>
+                        <Image style={logo} source={{ uri: icon }} />
+                        <Text style={title}>{name}</Text>
+                    </View>
+                    <View style={content}>
+                        <Text style={description}>{vicinity}</Text>
+                    </View>
                 </View>
-                <View style={content}>
-                    <Text style={description}>{vicinity}</Text>
-                </View>
+            </TouchableOpacity>
+            <View style={reviewContainer}>
+                <Rating
+                    startingValue={rating}
+                    fractions={1}
+                    imageSize={16}
+                    readonly={true}
+                    tintColor="white"
+
+                />
+                {user_ratings_total && <Text>{` (${user_ratings_total})`}</Text>}
             </View>
-            {renderReviews()}
-        </TouchableOpacity>
+        </View>
     )
 }
 
 
 const styles = StyleSheet.create({
+    cardContainer: {
+        marginVertical: 5
+    },
     container: {
+        backgroundColor: "#3c3c3c",
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
         marginBottom: 5,
-        borderColor: "#666",
-        borderWidth: 1,
         borderRadius: 10,
         minHeight: 175,
         marginTop: 10,
-        width: "90%",
+        width: "85%",
         marginLeft: "auto",
-        marginRight: "auto"
+        marginRight: "auto",
+        elevation: 4,
+        shadowOffset: { width: 50, height: 50 },
+        shadowColor: "grey",
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
     },
     image: {
         height: 175,
         width: '100%',
         flex: 1,
         position: "absolute",
-        opacity: 0.6,
+        opacity: 0.8,
+        resizeMode: "cover"
 
     },
     opacityCover: {
@@ -89,16 +98,16 @@ const styles = StyleSheet.create({
         padding: 5
     },
     logo: {
-        borderRadius: 50,
-        height: 55,
-        width: 55,
-        opacity: 1
+        borderRadius: 15,
+        height: 45,
+        width: 45,
+
     },
     title: {
-        color: "black",
-        fontSize: 18,
+        color: "white",
+        fontSize: 20,
         fontWeight: "bold",
-        left: 24,
+        left: 15,
         flexWrap: "wrap",
         flex: 1
     },
@@ -107,33 +116,24 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     description: {
-        color: "black",
-        fontSize: 14,
-        fontWeight: "bold",
+        color: "white",
+        fontSize: 16,
         marginBottom: 16,
         minWidth: "100%",
-        padding: 6
+        padding: 6,
+        paddingHorizontal: 12
+
     },
     reviews: {
-        color: "black",
-        fontSize: 12,
-        fontWeight: "bold",
+        color: "white",
+        fontSize: 16,
         width: "100%",
         padding: 8,
         position: "absolute",
         bottom: 8
     },
-    status: {
-        position: "absolute",
-        right: -24,
-        top: 26,
-        width: "30%",
-        zIndex: 99,
-        color: "white",
-        backgroundColor: "black",
-        fontSize: 8,
-        textAlign: "center",
-        fontWeight: "normal",
-        transform: [{ rotate: '45deg' }]
+    reviewContainer:
+    {
+        flexDirection: "row", flex: 1, marginLeft: "auto", marginRight: "auto", alignItems: "center"
     }
 });

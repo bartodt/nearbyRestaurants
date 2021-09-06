@@ -24,7 +24,7 @@ export type PredictionType = {
     opening_hours?: {open_now: boolean}
     photos?: Photos[]
     photo_url?: string
-    place_id?: string
+    place_id: string
     rating: number
     user_ratings_total: number
     vicinity: string

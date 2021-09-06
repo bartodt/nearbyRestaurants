@@ -3,8 +3,9 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { Restaurant } from '../../types'
 import { Card } from "./Card"
-import { getList } from '../../app/reducer'
-import { useSelector } from 'react-redux'
+import { getList, setReviews } from '../../app/reducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { getGoogleReviews } from '../../services'
 
 
 interface OwnProps {
@@ -16,15 +17,21 @@ type Props = OwnProps;
 
 
 const CardList: FC<Props> = ({ navigation }) => {
-    const arrayList = useSelector(getList)
+    const restaurantList = useSelector(getList)
+    const dispatch = useDispatch()
 
-    const getReviews = () => {
+    const goToReviews = async (id: string) => {
+        let reviews =  await getGoogleReviews(id);
+        if (!reviews) return;
+        if (reviews.length > 10) reviews = reviews.slice(0, 10);
+        await dispatch(setReviews(reviews));
         navigation.navigate("Reviews")
     }
 
     const renderItem = ({ item }: { item: Restaurant }) => {
         return (
             <Card
+                key={item.place_id}
                 photo_url={item.photo_url}
                 icon={item.icon}
                 name={item.name}
@@ -32,19 +39,21 @@ const CardList: FC<Props> = ({ navigation }) => {
                 user_ratings_total={item.user_ratings_total}
                 vicinity={item.vicinity}
                 opening_hours={item.opening_hours}
-                action={getReviews}
                 geometry={item.geometry}
+                place_id={item.place_id}
+                action={() => goToReviews(item.place_id)}
             />
         )
     }
 
     return (
         <View>
-            <FlatList
-                data={arrayList}
+            {restaurantList.length > 0 && <FlatList
+                data={restaurantList}
                 renderItem={renderItem}
                 keyExtractor={(item: Restaurant) => item.name}
-            />
+            />}
+
         </View>
     )
 }

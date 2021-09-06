@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { StyleSheet, Text } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { PredictionType } from '../../types'
@@ -32,7 +32,7 @@ const Predictions: FunctionComponent<PredictionProps> = ({ predictions, onPredic
             renderItem={renderItem}
             keyExtractor={(item) => item.place_id}
             keyboardShouldPersistTaps='handled'
-            style={[predictionsContainer, predictions.length === 1 ? null : {bottom: 5}]}
+            style={[predictionsContainer]}
         />
     )
 }
@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
         width: "95%",
         opacity: 0.8,
         borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5
+        borderBottomRightRadius: 5,
+        bottom: 12
     },
     predictionRow: {
         width: "95%",
@@ -54,7 +55,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.3,
     },
     text: {
-        fontStyle: "italic"
     }
 })
 

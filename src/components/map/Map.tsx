@@ -6,27 +6,30 @@ import {
   StatusBar,
   TouchableOpacity,
   Alert,
-  Platform
+  Platform,
+  Dimensions,
 } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { PredictionType, Region, Restaurant } from '../../types';
 import SearchBar from './SearchBar';
-import { default as env } from 'react-native-config';
 import Geolocation from '@react-native-community/geolocation';
 import Predictions from './Predictions';
 import { getList, setList } from '../../app/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { check, request, PERMISSIONS, RESULTS, Permission as RNPermission } from 'react-native-permissions';
-import { useNavigation } from '@react-navigation/core';
-
-const GOOGLE_PACES_API_BASE_URL = 'https://maps.googleapis.com/maps/api/place'
+import { useHeaderHeight } from '@react-navigation/elements';
+import { getGoogleAutoComplete, getGoogleLocation, getGoogleNearbySearch } from '../../services';
+import ICONS from "../../assets"
+import Svg, { Path } from 'react-native-svg';
 interface OwnProps {
   navigation: any;
 }
 
 type Props = OwnProps;
 
+
 const Map: FC<Props> = ({ navigation }) => {
+  const headerHeight = useHeaderHeight();
   const [search, setSearch] = useState<string>("")
   const [region, setRegion] = useState<Region>({
     latitude: 0,
@@ -40,7 +43,6 @@ const Map: FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch()
 
 
-
   useEffect(() => {
     if (search.trim() === '' || pressedPrediction) {
       setPredictions([])
@@ -49,32 +51,14 @@ const Map: FC<Props> = ({ navigation }) => {
 
 
   useEffect(() => {
-    findGPSCoordinates()
-  }, [])
-
-  useEffect(() => {
-
-  })
-
-  useEffect(() => {
     const moveMapToCoordenates = async () => {
-      let nearbySearch = await axios.request({
-        method: 'get',
-        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${region.latitude},${region.longitude}&type=restaurant&rankby=distance&key=${env.GOOGLE_API_KEY}`,
-      })
+      try {
+        const nearbyPlaces = await getGoogleNearbySearch(region.latitude, region.longitude)
+        await dispatch(setList(nearbyPlaces))
+      } catch (error: any) {
+        Alert.alert("Error", error)
+      }
 
-      const { data: { results } } = nearbySearch
-
-      let nearestRestaurants = results.filter((marker: Restaurant) => (marker.business_status === "OPERATIONAL")).slice(0, 10).sort((a: Restaurant, b: Restaurant) => (a.rating > b.rating) ? -1 : ((b.rating > a.rating) ? 1 : 0)).map((rest: Restaurant) =>
-        rest.photos ? {
-          ...rest, photo_url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=250&maxheight=250&photo_reference=${rest.photos[0].photo_reference}
-    &key=${env.GOOGLE_API_KEY}`
-        } : rest
-      )
-
-      console.log(nearestRestaurants)
-
-      await dispatch(setList(nearestRestaurants))
     }
 
     moveMapToCoordenates();
@@ -85,39 +69,29 @@ const Map: FC<Props> = ({ navigation }) => {
   const onChangeText = async (text: string) => {
     setSearch(text)
     try {
-      const result = await axios.request({
-        method: 'post',
-        url: `${GOOGLE_PACES_API_BASE_URL}/autocomplete/json?key=${env.GOOGLE_API_KEY}&input=${text}`
-      })
+      const result = await getGoogleAutoComplete(text)
       if (result) {
         const { predictions } = result.data
         setPredictions(predictions)
       }
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      Alert.alert("Error", error)
     }
   }
 
 
 
-  const onPredictionTapped = async (placeId: string, description: string) => {
+  const onPredictionTapped = async (description: string) => {
     try {
-      let query = description.replace(/\s/g, "+")
-      const result = await axios.request({
-        method: 'post',
-        url: `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${env.GOOGLE_API_KEY}`
-      })
-
+      const result = await getGoogleLocation(description) // returns {lat, lng}
       if (result) {
-        const { lat, lng } = result.data.results[0].geometry.location
-        pressedPrediction
         setSearch(description)
         setPressedPrediction(true)
-        setRegion({ ...region, latitude: lat, longitude: lng })
+        setRegion({ ...region, ...result })
       }
 
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      Alert.alert("Error", error)
     }
   }
 
@@ -138,7 +112,7 @@ const Map: FC<Props> = ({ navigation }) => {
         (error) => {
           Alert.alert("We couldn't access your location.", "Please, turn on your location in order to show you the nearest restaurants.")
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        { enableHighAccuracy: true, timeout: 15000 }
       );
     }
   };
@@ -158,8 +132,8 @@ const Map: FC<Props> = ({ navigation }) => {
     }
   }
 
-  const goToListDetail = () => {
-    navigation.navigate("RestaurantList")
+  const clearText = () => {
+    setSearch("")
   }
 
   const { container, map, locationIcon, locationContainer } = styles
@@ -171,36 +145,41 @@ const Map: FC<Props> = ({ navigation }) => {
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         region={region}
-        initialRegion={region}
       >
         {markers.length > 0 && markers.map((marker: Restaurant, index) => (
           <Marker
             key={index}
             coordinate={{ latitude: marker.geometry.location.lat, longitude: marker.geometry.location.lng }}
             title={marker.name}
-            pinColor={marker.opening_hours?.open_now ? "#FF0000" : "#A0A0A0"}
+            pinColor={"#ff467b"}
           />
         )
 
         )}
+
       </MapView>
-      <View style={container}>
+
+      <View style={[container, { minHeight: Dimensions.get("window").height - headerHeight }]}>
         <SearchBar
           value={search}
           onChangeText={(text) => {
             onChangeText(text)
           }}
+          clearText={clearText}
         />
         {predictions.length > 0 && <Predictions predictions={predictions} onPredictionTapped={onPredictionTapped} />}
 
+        <TouchableOpacity
+          onPress={findGPSCoordinates}
+          style={locationContainer}>
+          <Svg style={locationIcon} viewBox={ICONS["location"].viewBox}>
+            <Path
+              fill="#111d5e"
+              d={ICONS["location"].primary}
+            />
+          </Svg>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        onPress={goToListDetail}
-        style={locationIcon}>
-
-      </TouchableOpacity>
-
     </>
   );
 }
@@ -216,14 +195,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   locationContainer: {
-    backgroundColor: 'transparent',
-    width: 20
+    width: 60, height: 60,
+    bottom: 80, right: 20,
+    position: "absolute",
+    borderRadius: 30,
+    backgroundColor: "white",
+    alignItems: "center"
   },
   locationIcon: {
-    backgroundColor: "blue",
-    width: 40,
-    height: 40,
-    flex: 1,
+    flex: 1, height: 32, width: 32, marginTop: "auto", marginBottom: "auto", marginLeft: "auto", marginRight: "auto"
   }
 });
 
