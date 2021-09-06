@@ -1,7 +1,7 @@
 # nearbyRestaurants
 
-APP for getting a list of near restaurants based on a selected list.
-Made with React Native, TypeScript, Redux and Google Maps APIs.
+APP for getting a list of near restaurants based on a selected direction.
+Made with React Native, TypeScript, Redux and Google Maps APIs for fetching data.
 
 <p align="center">
        <img src="https://i.ibb.co/NWMtXNN/Screenshot-1630893913.png" width="250" title="autocomplete">
