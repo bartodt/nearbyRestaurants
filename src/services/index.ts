@@ -57,7 +57,6 @@ export const getGoogleAutoComplete = async (query: string) => {
     });
     return result.data
   } catch (error: any) {
-    console.log(error);
     return Promise.reject({ ...error.data });
   }
 };
@@ -74,7 +73,6 @@ export const getGoogleLocation = async (query: string) => {
 
     return { latitude: lat, longitude: lng };
   } catch (error: any) {
-    console.log(error);
     return Promise.reject({ ...error.data });
   }
 };
