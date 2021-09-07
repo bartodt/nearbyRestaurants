@@ -54,7 +54,7 @@ export const Card: FC<Props> = ({
 
 const styles = StyleSheet.create({
     cardContainer: {
-        marginVertical: 5
+        marginVertical: 10
     },
     container: {
         backgroundColor: "#3c3c3c",
