@@ -1,11 +1,11 @@
 import React, { FC, ReactElement } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Restaurant } from '../../types';
+import { RestaurantCard } from '../../types';
 import { Rating } from 'react-native-ratings';
 
 
-type Props = Restaurant
+type Props = RestaurantCard
 
 export const Card: FC<Props> = ({
     photo_url,

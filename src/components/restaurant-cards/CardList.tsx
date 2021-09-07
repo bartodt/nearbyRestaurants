@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { Restaurant } from '../../types'
+import { RestaurantCard } from '../../types'
 import { Card } from "./Card"
 import { getList, setReviews } from '../../app/reducer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,14 +21,14 @@ const CardList: FC<Props> = ({ navigation }) => {
     const dispatch = useDispatch()
 
     const goToReviews = async (id: string) => {
-        let reviews =  await getGoogleReviews(id);
+        let reviews = await getGoogleReviews(id);
         if (!reviews) return;
         if (reviews.length > 10) reviews = reviews.slice(0, 10);
         await dispatch(setReviews(reviews));
         navigation.navigate("Reviews")
     }
 
-    const renderItem = ({ item }: { item: Restaurant }) => {
+    const renderItem = ({ item }: { item: RestaurantCard }) => {
         return (
             <Card
                 key={item.place_id}
@@ -38,8 +38,6 @@ const CardList: FC<Props> = ({ navigation }) => {
                 rating={item.rating}
                 user_ratings_total={item.user_ratings_total}
                 vicinity={item.vicinity}
-                opening_hours={item.opening_hours}
-                geometry={item.geometry}
                 place_id={item.place_id}
                 action={() => goToReviews(item.place_id)}
             />
@@ -51,7 +49,7 @@ const CardList: FC<Props> = ({ navigation }) => {
             {restaurantList.length > 0 && <FlatList
                 data={restaurantList}
                 renderItem={renderItem}
-                keyExtractor={(item: Restaurant) => item.name}
+                keyExtractor={(item: RestaurantCard) => item.name}
             />}
 
         </View>
