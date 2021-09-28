@@ -14,7 +14,7 @@ import { PredictionType, Region, Restaurant } from '../../types';
 import SearchBar from './SearchBar';
 import Geolocation from '@react-native-community/geolocation';
 import Predictions from './Predictions';
-import { getList, setList } from '../../app/reducer';
+import { getList, setList } from '../../store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { check, request, PERMISSIONS, RESULTS, Permission as RNPermission } from 'react-native-permissions';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -28,7 +28,7 @@ interface OwnProps {
 type Props = OwnProps;
 
 
-const Map: FC<Props> = ({ navigation }) => {
+const Map: FC<Props> = ({}) => {
   const headerHeight = useHeaderHeight();
   const [search, setSearch] = useState<string>("")
   const [region, setRegion] = useState<Region>({
